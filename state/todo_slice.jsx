@@ -3,24 +3,10 @@ import {createSlice} from "@reduxjs/toolkit"
 const todoSlice = createSlice({
     name : "todo",
     initialState : {
-        currentId : 4,
+        currentId : 0,
         todos : [
-            {
-                id : 1,
-                text : "Complete this project",
-                state : "todo",
-            },
-            {
-                id : 2,
-                text : "Bike service",
-                state : "todo",
-            },
-            {
-                id : 3,
-                text : "Learn react native",
-                state : "done",
-            },
         ],
+       
     },
     reducers :{
         addTodo : (state,action) => {
@@ -31,10 +17,12 @@ const todoSlice = createSlice({
             })
         },
         changeTodoState : (state,action)=>{
-            const item = state.todos.findIndex((item)=> item.id === action.payload);
-            if(item>-1){
-                state.todos[item].state === "todo" ? "done" : "todo";
-                state.todos.push(state.todos.splice(item,1)[0]);
+            const itemIndex = state.todos.findIndex((item) => item.id === action.payload);
+  
+            if (itemIndex > -1) {
+              const currentState = state.todos[itemIndex].state;
+              state.todos[itemIndex].state = currentState === "todo" ? "done" : "todo";
+              state.todos.push(state.todos.splice(itemIndex, 1)[0]);
             }
         },
         deleteTodo : (state,action)=>{

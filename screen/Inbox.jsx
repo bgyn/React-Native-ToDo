@@ -6,14 +6,15 @@ import {
   View,
   FlatList,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import TodoItem from "../components/TodoItem";
+import TextForm from "../components/TextForm";
 
 const Inbox = () => {
-  const todo = useSelector((state) => state.todo.todos);
-  const dispatch = useDispatch();
+  const todo = useSelector((state) => state.todo.todos.filter((todo)=> todo.state==="todo"));
+  const completedTodo = useSelector((state) => state.todo.todos.filter((todo)=> todo.state==="done"));
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -34,9 +35,9 @@ const Inbox = () => {
       <View style={styles.divider} />
       <View style={styles.listView}>
         <Text style={styles.listTitle}>Completed</Text>
-        {todo.length !== 0 ? (
+        {completedTodo.length !== 0 ? (
           <FlatList
-            data={todo}
+            data={completedTodo}
             renderItem={({ item }) => (
               <TodoItem {...item} keyExtractor={(item) => item.id} />
             )}
@@ -45,6 +46,7 @@ const Inbox = () => {
           <Text style={styles.emptyText}>No completed task</Text>
         )}
       </View>
+      <TextForm/>
     </SafeAreaView>
   );
 };
@@ -58,7 +60,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#f7f8fa",
   },
   pageTitle: {
-    marginBottom: 35,
     paddingHorizontal: 15,
     fontSize: 54,
     fontWeight: "600",
